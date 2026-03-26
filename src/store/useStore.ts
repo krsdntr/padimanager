@@ -163,7 +163,7 @@ function generateTasks(cycle: PlantingCycle, variety: Variety): Task[] {
       day: 14, 
       type: 'fertilizer', 
       title: 'Pemupukan Susulan 1', 
-      description: `Gunakan Urea (${Math.round(100 * area)} kg) dan NPK (${Math.round(150 * area)} kg) untuk lahan ${area} Ha.` 
+      description: `Gunakan Urea (${(100 * area).toFixed(1)} kg) dan NPK (${(150 * area).toFixed(1)} kg) untuk lahan ${area} Ha.` 
     },
     { 
       day: 21, 
@@ -175,7 +175,7 @@ function generateTasks(cycle: PlantingCycle, variety: Variety): Task[] {
       day: 35, 
       type: 'fertilizer', 
       title: 'Pemupukan Susulan 2', 
-      description: `Gunakan Urea (${Math.round(100 * area)} kg), NPK (${Math.round(150 * area)} kg), dan KCl (${Math.round(50 * area)} kg).` 
+      description: `Gunakan Urea (${(100 * area).toFixed(1)} kg), NPK (${(150 * area).toFixed(1)} kg), dan KCl (${(50 * area).toFixed(1)} kg).` 
     },
     { 
       day: 45, 

@@ -7,7 +7,8 @@ import {
   Settings as SettingsIcon,
   PlusCircle,
   Loader2,
-  Wallet
+  Wallet,
+  BarChart2
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -20,6 +21,7 @@ import Settings from './components/Settings';
 import NewCycleModal from './components/NewCycleModal';
 import FinancialReport from './components/FinancialReport';
 import LandingPage from './components/LandingPage';
+import YieldAnalytics from './components/YieldAnalytics';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -27,7 +29,7 @@ function cn(...inputs: ClassValue[]) {
 
 export default function App() {
   const { loadData, isLoading, activeCycle } = useStore();
-  const [activeTab, setActiveTab] = useState<'landing' | 'home' | 'schedule' | 'edu' | 'finance' | 'settings'>(
+  const [activeTab, setActiveTab] = useState<'landing' | 'home' | 'schedule' | 'edu' | 'finance' | 'analytics' | 'settings'>(
     localStorage.getItem('hasSeenLanding') === 'true' ? 'home' : 'landing'
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,6 +62,7 @@ export default function App() {
           {activeTab === 'schedule' && <Timeline />}
           {activeTab === 'edu' && <Encyclopedia />}
           {activeTab === 'finance' && <FinancialReport />}
+          {activeTab === 'analytics' && <YieldAnalytics />}
           {activeTab === 'settings' && <Settings onNavigateToLanding={() => setActiveTab('landing')} />}
         </div>
       </main>
@@ -85,7 +88,12 @@ export default function App() {
             icon={<Wallet size={22} />} 
             label="Keuangan" 
           />
-          
+          <NavButton 
+            active={activeTab === 'analytics'} 
+            onClick={() => setActiveTab('analytics')} 
+            icon={<BarChart2 size={22} />} 
+            label="Analisis" 
+          />
           <NavButton 
             active={activeTab === 'edu'} 
             onClick={() => setActiveTab('edu')} 

@@ -9,13 +9,14 @@ export default function NewCycleModal({ onClose }: { onClose: () => void }) {
   const { addCycle } = useStore();
   const [varietyId, setVarietyId] = useState(VARIETIES[0].id);
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
-  const [fieldArea, setFieldArea] = useState(1);
+  const [fieldArea, setFieldArea] = useState<number | string>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const selectedVariety = useMemo(() => VARIETIES.find(v => v.id === varietyId) || VARIETIES[0], [varietyId]);
 
   const calculations = useMemo(() => {
-    const area = isNaN(fieldArea) || fieldArea <= 0 ? 0 : fieldArea;
+    const parsedArea = typeof fieldArea === 'string' ? parseFloat(fieldArea) : fieldArea;
+    const area = isNaN(parsedArea) || parsedArea <= 0 ? 0 : parsedArea;
     
     // Estimates per hectare
     const seedPerHa = 25; // kg
@@ -39,7 +40,8 @@ export default function NewCycleModal({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await addCycle(varietyId, startDate, fieldArea);
+      const parsedArea = typeof fieldArea === 'string' ? parseFloat(fieldArea) : fieldArea;
+      await addCycle(varietyId, startDate, isNaN(parsedArea) ? 0 : parsedArea);
       onClose();
     } catch (error) {
       console.error('Failed to add cycle', error);
@@ -112,7 +114,7 @@ export default function NewCycleModal({ onClose }: { onClose: () => void }) {
                   step="0.01"
                   min="0.01"
                   value={fieldArea}
-                  onChange={(e) => setFieldArea(parseFloat(e.target.value))}
+                  onChange={(e) => setFieldArea(e.target.value)}
                   required
                   className="w-full rounded-2xl border border-stone-200 bg-stone-50 p-3 pr-10 text-sm text-stone-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 />

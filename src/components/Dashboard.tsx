@@ -6,6 +6,7 @@ import { id } from 'date-fns/locale';
 import { Sprout, Droplets, Bug, Scissors, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Task } from '../types';
 import WeatherWidget from './WeatherWidget';
+import MarketPriceWidget from './MarketPriceWidget';
 
 export default function Dashboard({ onStartNew }: { onStartNew: () => void }) {
   const { activeCycle, tasks } = useStore();
@@ -64,7 +65,10 @@ export default function Dashboard({ onStartNew }: { onStartNew: () => void }) {
         </button>
       </header>
 
-      <WeatherWidget />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <WeatherWidget />
+        <MarketPriceWidget />
+      </div>
 
       {/* Progress Card */}
       <div className="mb-8 rounded-3xl bg-white p-6 shadow-sm border border-stone-100">
