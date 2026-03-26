@@ -105,9 +105,9 @@ export default function YieldAnalytics() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 items-start">
+          <div className="flex flex-col gap-6 mb-8">
             {/* Chart */}
-            <div className="lg:col-span-2 bg-white rounded-2xl border border-stone-100 shadow-sm p-6">
+            <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6">
               <h3 className="text-sm font-bold text-stone-900 mb-6">Perbandingan Kinerja Antar Siklus</h3>
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -133,7 +133,7 @@ export default function YieldAnalytics() {
             </div>
 
             {/* Recommendations (PANDUAN EVALUASI NON-AI) */}
-            <div className="bg-stone-50 rounded-2xl border border-stone-200 p-6 flex flex-col h-full">
+            <div className="bg-stone-50 rounded-2xl border border-stone-200 p-6 flex flex-col">
               <div className="flex items-center gap-2 mb-4 text-stone-800">
                 <AlertCircle size={20} className="text-amber-500" />
                 <h3 className="font-bold text-sm">Panduan & Evaluasi</h3>
