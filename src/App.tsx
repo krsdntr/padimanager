@@ -28,7 +28,7 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export default function App() {
-  const { loadData, isLoading, activeCycle } = useStore();
+  const { loadData, isLoading, activeCycle, setDeferredPrompt } = useStore();
   const [activeTab, setActiveTab] = useState<'landing' | 'home' | 'schedule' | 'edu' | 'finance' | 'analytics' | 'settings'>(
     localStorage.getItem('hasSeenLanding') === 'true' ? 'home' : 'landing'
   );
@@ -37,6 +37,19 @@ export default function App() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, [setDeferredPrompt]);
 
   if (isLoading) {
     return (

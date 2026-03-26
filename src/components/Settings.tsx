@@ -1,14 +1,24 @@
 import React, { useRef } from 'react';
 import { useStore } from '../store/useStore';
-import { Download, Upload, Trash2, Info, Github, ShieldCheck, LayoutTemplate } from 'lucide-react';
+import { Download, Upload, Trash2, Info, Github, ShieldCheck, LayoutTemplate, MonitorSmartphone } from 'lucide-react';
 
 interface SettingsProps {
   onNavigateToLanding: () => void;
 }
 
 export default function Settings({ onNavigateToLanding }: SettingsProps) {
-  const { exportData, importData, clearData } = useStore();
+  const { exportData, importData, clearData, deferredPrompt, setDeferredPrompt } = useStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+    }
+    setDeferredPrompt(null);
+  };
 
   const handleExport = async () => {
     const data = await exportData();
@@ -56,6 +66,20 @@ export default function Settings({ onNavigateToLanding }: SettingsProps) {
         <section>
           <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-stone-400">Tampilan</h2>
           <div className="overflow-hidden rounded-2xl border border-stone-100 bg-white">
+          {deferredPrompt && (
+            <button 
+              onClick={handleInstall}
+              className="flex w-full items-center gap-4 p-4 text-left transition-colors hover:bg-stone-50 border-b border-stone-50"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                <MonitorSmartphone size={20} />
+              </div>
+              <div className="flex-1">
+                <p className="font-bold text-stone-900">Instal Aplikasi</p>
+                <p className="text-xs text-stone-500">Pasang PadiManager di layar utama perangkat Anda.</p>
+              </div>
+            </button>
+          )}
             <button 
               onClick={onNavigateToLanding}
               className="flex w-full items-center gap-4 p-4 text-left transition-colors hover:bg-stone-50"

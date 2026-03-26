@@ -23,6 +23,8 @@ interface PadiState {
   importData: (json: string) => Promise<void>;
   addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void>;
   deleteTransaction: (id: string) => Promise<void>;
+  deferredPrompt: any;
+  setDeferredPrompt: (prompt: any) => void;
 }
 
 export const useStore = create<PadiState>((set, get) => ({
@@ -145,6 +147,8 @@ export const useStore = create<PadiState>((set, get) => ({
     await dbActions.deleteTransaction(id);
     await get().loadData();
   },
+  deferredPrompt: null,
+  setDeferredPrompt: (prompt) => set({ deferredPrompt: prompt }),
 }));
 
 function generateTasks(cycle: PlantingCycle, variety: Variety): Task[] {
