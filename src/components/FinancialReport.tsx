@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { Transaction, TransactionType, TransactionCategory } from '../types';
 import { format, parseISO } from 'date-fns';
@@ -10,6 +10,17 @@ export default function FinancialReport() {
   const { transactions, activeCycle, addTransaction, deleteTransaction } = useStore();
   const [isAdding, setIsAdding] = useState(false);
   const [filterCycle, setFilterCycle] = useState<'all' | 'active'>('active');
+
+  useEffect(() => {
+    if (isAdding) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isAdding]);
   
   const [formData, setFormData] = useState({
     date: format(new Date(), 'yyyy-MM-dd'),
@@ -240,8 +251,8 @@ export default function FinancialReport() {
 
       {/* Add Transaction Modal */}
       {isAdding && (
-        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-stone-900/40 backdrop-blur-sm sm:items-center p-4">
-          <div className="w-full max-w-md animate-in slide-in-from-bottom duration-300 rounded-t-[32px] bg-white p-6 shadow-2xl sm:rounded-[32px] max-h-[90vh] overflow-y-auto scrollbar-hide">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md animate-in zoom-in-95 duration-200 rounded-[32px] bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto scrollbar-hide">
             <div className="mb-6 flex items-center justify-between sticky top-0 bg-white z-10 pb-2">
               <h2 className="text-2xl font-bold text-stone-900">Tambah Transaksi Baru</h2>
               <button 
