@@ -14,7 +14,6 @@ export default function Dashboard({ onStartNew }: { onStartNew: () => void }) {
   if (!activeCycle) {
     return (
       <div className="p-6">
-        <WeatherWidget />
         <div className="flex h-full flex-col items-center justify-center p-8 text-center">
           <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
             <Sprout size={48} />
