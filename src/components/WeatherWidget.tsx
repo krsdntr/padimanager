@@ -100,38 +100,38 @@ export default function WeatherWidget() {
             {error}
           </div>
         ) : activeView === 'hourly' ? (
-          <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x items-center w-full">
+          <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x items-stretch w-full h-full">
             {hourlyForecast.map((hour, idx) => {
               const info = weatherCodes[hour.weathercode] || weatherCodes[0];
               const time = hour.time ? format(parseISO(hour.time), 'HH:mm') : '';
               const precip = hour.precipitation_probability || 0;
               
               return (
-                <div key={idx} className="flex shrink-0 w-[72px] flex-col items-center justify-center gap-1.5 bg-white py-3 rounded-xl border border-stone-100 shadow-sm snap-start">
+                <div key={idx} className="flex shrink-0 w-[90px] flex-col items-center justify-between bg-white py-4 px-2 rounded-xl border border-stone-100 shadow-sm snap-start">
                   <span className="text-[10px] font-bold text-stone-400">{idx === 0 ? 'Sekarang' : time}</span>
-                  {React.cloneElement(info.icon as React.ReactElement, { size: 18 })}
-                  <div className="flex flex-col items-center mt-1">
-                    <span className="text-[10px] font-black text-emerald-600">{precip}%</span>
-                    <span className="text-[11px] font-bold text-stone-700">{Math.round(hour.temperature)}°</span>
+                  {React.cloneElement(info.icon as React.ReactElement, { size: 24 })}
+                  <div className="flex flex-col items-center">
+                    <span className="text-xs font-black text-emerald-600 mb-0.5"><Droplets size={10} className="inline mr-0.5" />{precip}%</span>
+                    <span className="text-sm font-bold text-stone-700">{Math.round(hour.temperature)}°</span>
                   </div>
                 </div>
               );
             })}
           </div>
         ) : (
-          <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x items-center w-full">
+          <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x items-stretch w-full h-full">
             {dailyForecast.map((day, idx) => {
               const info = weatherCodes[day.weathercode] || weatherCodes[0];
               const dayName = idx === 0 ? 'Hari Ini' : format(parseISO(day.time), 'EEEE', { locale: id });
               const precip = day.precipitation_probability_max || 0;
               
               return (
-                <div key={idx} className="flex shrink-0 w-[84px] flex-col items-center justify-center gap-2 bg-white py-3 px-2 rounded-xl border border-stone-100 shadow-sm snap-start">
+                <div key={idx} className="flex shrink-0 w-[90px] flex-col items-center justify-between bg-white py-4 px-2 rounded-xl border border-stone-100 shadow-sm snap-start">
                   <span className="text-[10px] font-bold text-stone-600 truncate w-full text-center">{dayName}</span>
                   {React.cloneElement(info.icon as React.ReactElement, { size: 24 })}
-                  <div className="flex flex-col items-center mt-1 w-full">
-                    <span className="text-[10px] font-black text-emerald-600 mb-0.5"><Droplets size={10} className="inline mr-0.5" />{precip}%</span>
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold">
+                  <div className="flex flex-col items-center w-full">
+                    <span className="text-xs font-black text-emerald-600 mb-0.5"><Droplets size={10} className="inline mr-0.5" />{precip}%</span>
+                    <div className="flex items-center gap-1.5 text-xs font-bold w-full justify-center">
                       <span className="text-stone-400">{Math.round(day.temperature_2m_min)}°</span>
                       <span className="text-stone-700">{Math.round(day.temperature_2m_max)}°</span>
                     </div>
