@@ -94,13 +94,13 @@ export default function WeatherWidget() {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 bg-stone-50/50 overflow-y-auto p-4 custom-scrollbar relative">
+      <div className="flex-1 flex flex-col justify-center bg-stone-50/50 p-4 relative">
         {error && !currentWeather ? (
           <div className="bg-red-50 p-3 rounded-xl text-center text-xs font-medium text-red-500">
             {error}
           </div>
         ) : activeView === 'hourly' ? (
-          <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x">
+          <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x items-center w-full">
             {hourlyForecast.map((hour, idx) => {
               const info = weatherCodes[hour.weathercode] || weatherCodes[0];
               const time = hour.time ? format(parseISO(hour.time), 'HH:mm') : '';
@@ -119,24 +119,19 @@ export default function WeatherWidget() {
             })}
           </div>
         ) : (
-          <div className="flex flex-col gap-2 overflow-y-auto max-h-[140px] custom-scrollbar pr-1">
+          <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x items-center w-full">
             {dailyForecast.map((day, idx) => {
               const info = weatherCodes[day.weathercode] || weatherCodes[0];
               const dayName = idx === 0 ? 'Hari Ini' : format(parseISO(day.time), 'EEEE', { locale: id });
               const precip = day.precipitation_probability_max || 0;
               
               return (
-                <div key={idx} className="flex items-center justify-between text-sm p-3 bg-white rounded-xl border border-stone-100 shadow-sm">
-                  <span className="w-24 font-bold text-stone-700 text-xs">{dayName}</span>
-                  <div className="flex items-center gap-2 flex-1 justify-center">
-                    {React.cloneElement(info.icon as React.ReactElement, { size: 16 })}
-                    <span className="text-stone-500 text-[11px] font-medium hidden sm:inline">{info.label}</span>
-                  </div>
-                  <div className="flex items-center gap-3 w-32 justify-end">
-                    <span className="text-emerald-600 font-bold flex items-center gap-1 text-[11px] w-12 justify-end">
-                      <Droplets size={10} /> {precip}%
-                    </span>
-                    <div className="flex items-center gap-1.5 text-[11px] font-bold w-12 justify-end">
+                <div key={idx} className="flex shrink-0 w-[84px] flex-col items-center justify-center gap-2 bg-white py-3 px-2 rounded-xl border border-stone-100 shadow-sm snap-start">
+                  <span className="text-[10px] font-bold text-stone-600 truncate w-full text-center">{dayName}</span>
+                  {React.cloneElement(info.icon as React.ReactElement, { size: 24 })}
+                  <div className="flex flex-col items-center mt-1 w-full">
+                    <span className="text-[10px] font-black text-emerald-600 mb-0.5"><Droplets size={10} className="inline mr-0.5" />{precip}%</span>
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold">
                       <span className="text-stone-400">{Math.round(day.temperature_2m_min)}°</span>
                       <span className="text-stone-700">{Math.round(day.temperature_2m_max)}°</span>
                     </div>
