@@ -1,0 +1,7 @@
+{
+  "name": "Remix: PadiManager",
+  "description": "Aplikasi manajemen pertanian padi offline-first (PWA) untuk pemantauan siklus tanam, jadwal perawatan otomatis, dan pusat pengetahuan budidaya padi.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
