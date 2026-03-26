@@ -66,21 +66,21 @@ export default function Settings({ onNavigateToLanding }: SettingsProps) {
         <section>
           <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-stone-400">Tampilan</h2>
           <div className="overflow-hidden rounded-2xl border border-stone-100 bg-white">
-          {deferredPrompt && (
-            <button 
-              onClick={handleInstall}
-              className="flex w-full items-center gap-4 p-4 text-left transition-colors hover:bg-stone-50 border-b border-stone-50"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
-                <MonitorSmartphone size={20} />
-              </div>
-              <div className="flex-1">
-                <p className="font-bold text-stone-900">Instal Aplikasi</p>
-                <p className="text-xs text-stone-500">Pasang PadiManager di layar utama perangkat Anda.</p>
-              </div>
-            </button>
-          )}
-            <button 
+            {deferredPrompt && (
+              <button
+                onClick={handleInstall}
+                className="flex w-full items-center gap-4 p-4 text-left transition-colors hover:bg-stone-50 border-b border-stone-50"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                  <MonitorSmartphone size={20} />
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-stone-900">Instal Aplikasi</p>
+                  <p className="text-xs text-stone-500">Pasang PadiManager di layar utama perangkat Anda.</p>
+                </div>
+              </button>
+            )}
+            <button
               onClick={onNavigateToLanding}
               className="flex w-full items-center gap-4 p-4 text-left transition-colors hover:bg-stone-50"
             >
@@ -99,7 +99,7 @@ export default function Settings({ onNavigateToLanding }: SettingsProps) {
         <section>
           <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-stone-400">Manajemen Data</h2>
           <div className="overflow-hidden rounded-2xl border border-stone-100 bg-white">
-            <button 
+            <button
               onClick={handleExport}
               className="flex w-full items-center gap-4 p-4 text-left transition-colors hover:bg-stone-50 border-b border-stone-50"
             >
@@ -112,7 +112,7 @@ export default function Settings({ onNavigateToLanding }: SettingsProps) {
               </div>
             </button>
 
-            <button 
+            <button
               onClick={() => fileInputRef.current?.click()}
               className="flex w-full items-center gap-4 p-4 text-left transition-colors hover:bg-stone-50 border-b border-stone-50"
             >
@@ -123,16 +123,16 @@ export default function Settings({ onNavigateToLanding }: SettingsProps) {
                 <p className="font-bold text-stone-900">Impor Cadangan</p>
                 <p className="text-xs text-stone-500">Pulihkan data dari file cadangan.</p>
               </div>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleImport} 
-                className="hidden" 
-                accept=".json" 
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImport}
+                className="hidden"
+                accept=".json"
               />
             </button>
 
-            <button 
+            <button
               onClick={handleClear}
               className="flex w-full items-center gap-4 p-4 text-left transition-colors hover:bg-stone-50"
             >
@@ -160,7 +160,7 @@ export default function Settings({ onNavigateToLanding }: SettingsProps) {
                 <p className="text-sm font-medium text-emerald-600">Versi 1.0.0 (Beta)</p>
               </div>
             </div>
-            
+
             <p className="mb-6 text-sm text-stone-500 leading-relaxed">
               Aplikasi manajemen pertanian padi berbasis PWA (Progressive Web App) yang bekerja 100% secara offline. Data Anda aman tersimpan di perangkat Anda sendiri.
             </p>
@@ -168,7 +168,7 @@ export default function Settings({ onNavigateToLanding }: SettingsProps) {
             <div className="space-y-4 border-t border-stone-50 pt-6">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-stone-400">Pengembang</span>
-                <span className="font-bold text-stone-700">Tim Padi Digital</span>
+                <span className="font-bold text-stone-700">Krisdiantoro</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-stone-400">Lisensi</span>

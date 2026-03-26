@@ -94,8 +94,10 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
             </div>
             <span className="text-lg font-black tracking-tight text-white">PadiManager</span>
           </div>
-          <p className="text-sm mb-2">Dibuat untuk memajukan pertanian Indonesia.</p>
-          <p className="text-xs opacity-60">© {new Date().getFullYear()} PadiManager. All rights reserved.</p>
+          <p className="text-sm mb-2 italic">"PadiManager - Kelola Sawah Anda Lebih Cerdas & Mudah"</p>
+          <p className="text-xs opacity-60">
+            © {new Date().getFullYear()} PadiManager. Dibuat oleh <strong>Krisdiantoro</strong>.
+          </p>
         </div>
       </footer>
     </div>
