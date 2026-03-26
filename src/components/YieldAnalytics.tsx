@@ -105,11 +105,11 @@ export default function YieldAnalytics() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 items-start">
             {/* Chart */}
             <div className="lg:col-span-2 bg-white rounded-2xl border border-stone-100 shadow-sm p-6">
               <h3 className="text-sm font-bold text-stone-900 mb-6">Perbandingan Kinerja Antar Siklus</h3>
-              <div className="h-72">
+              <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData} margin={{ top: 0, right: 0, left: 10, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f4" />
@@ -125,8 +125,8 @@ export default function YieldAnalytics() {
                       cursor={{ fill: '#f5f5f4' }}
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     />
-                    <Bar dataKey="Pemasukan" fill="#059669" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="Pengeluaran" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="Pemasukan" fill="#059669" radius={[4, 4, 0, 0]} maxBarSize={50} />
+                    <Bar dataKey="Pengeluaran" fill="#ef4444" radius={[4, 4, 0, 0]} maxBarSize={50} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
