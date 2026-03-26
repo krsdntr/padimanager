@@ -100,14 +100,14 @@ export default function WeatherWidget() {
             {error}
           </div>
         ) : activeView === 'hourly' ? (
-          <div className="grid grid-cols-5 gap-y-4 gap-x-2">
+          <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar snap-x">
             {hourlyForecast.map((hour, idx) => {
               const info = weatherCodes[hour.weathercode] || weatherCodes[0];
               const time = hour.time ? format(parseISO(hour.time), 'HH:mm') : '';
               const precip = hour.precipitation_probability || 0;
               
               return (
-                <div key={idx} className="flex flex-col items-center justify-center gap-1.5 bg-white py-3 rounded-xl border border-stone-100 shadow-sm">
+                <div key={idx} className="flex shrink-0 w-[72px] flex-col items-center justify-center gap-1.5 bg-white py-3 rounded-xl border border-stone-100 shadow-sm snap-start">
                   <span className="text-[10px] font-bold text-stone-400">{idx === 0 ? 'Sekarang' : time}</span>
                   {React.cloneElement(info.icon as React.ReactElement, { size: 18 })}
                   <div className="flex flex-col items-center mt-1">
@@ -119,7 +119,7 @@ export default function WeatherWidget() {
             })}
           </div>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 overflow-y-auto max-h-[140px] custom-scrollbar pr-1">
             {dailyForecast.map((day, idx) => {
               const info = weatherCodes[day.weathercode] || weatherCodes[0];
               const dayName = idx === 0 ? 'Hari Ini' : format(parseISO(day.time), 'EEEE', { locale: id });
