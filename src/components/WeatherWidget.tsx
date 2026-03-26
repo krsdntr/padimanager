@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Cloud, CloudRain, Sun, Loader2, MapPin, ChevronDown, ChevronUp, Droplets, CloudLightning } from 'lucide-react';
+import { Cloud, CloudRain, Sun, Loader2, MapPin, Droplets, CloudLightning, Clock, CalendarDays } from 'lucide-react';
 import { useWeatherStore } from '../store/weatherStore';
 import { format, parseISO } from 'date-fns';
 import { id } from 'date-fns/locale';
-import { motion, AnimatePresence } from 'motion/react';
 
 const weatherCodes: Record<number, { label: string; icon: React.ReactNode }> = {
   0: { label: 'Cerah', icon: <Sun className="text-amber-500" /> },
@@ -29,7 +28,7 @@ export default function WeatherWidget() {
     fetchWeather 
   } = useWeatherStore();
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [activeView, setActiveView] = useState<'hourly' | 'daily'>('hourly');
 
   useEffect(() => {
     fetchWeather();
@@ -37,9 +36,9 @@ export default function WeatherWidget() {
 
   if (isLoading && !currentWeather) {
     return (
-      <div className="flex items-center justify-center rounded-full bg-white border border-emerald-100 p-4 shadow-sm mb-6">
-        <Loader2 className="h-5 w-5 animate-spin text-emerald-500" />
-        <span className="ml-2 text-sm text-stone-500">Memuat cuaca...</span>
+      <div className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-[2rem] bg-white border border-emerald-100 shadow-sm p-6">
+        <Loader2 className="h-6 w-6 animate-spin text-emerald-500 mb-2" />
+        <span className="text-xs font-medium text-stone-500">Memuat cuaca...</span>
       </div>
     );
   }
@@ -48,107 +47,119 @@ export default function WeatherWidget() {
   const currentPrecip = hourlyForecast[0]?.precipitation_probability || 0;
 
   return (
-    <div className="mb-8 bg-white border border-emerald-100 rounded-[2rem] shadow-sm overflow-hidden transition-all">
-      {/* Capsule Header */}
-      <div 
-        className="p-3 flex items-center justify-between cursor-pointer hover:bg-emerald-50/30 transition-colors"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <div className="flex items-center gap-3 px-2">
-          <div className="p-2 bg-emerald-50 rounded-full">
+    <div className="flex flex-col h-full bg-white border border-emerald-100 rounded-[2rem] shadow-sm overflow-hidden">
+      {/* Header */}
+      <div className="p-4 flex items-center justify-between bg-white z-10 shrink-0 border-b border-stone-50">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-emerald-50 rounded-2xl text-emerald-600">
             {React.cloneElement(weatherInfo.icon as React.ReactElement, { size: 24 })}
           </div>
           <div>
             <div className="flex items-baseline gap-2">
-              <span className="font-bold text-stone-800 text-lg">{Math.round(currentWeather?.temperature || 0)}°C</span>
-              <span className="text-sm font-medium text-stone-600">{weatherInfo.label}</span>
+              <span className="font-black text-stone-800 text-2xl tracking-tighter">{Math.round(currentWeather?.temperature || 0)}°</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-stone-500">{weatherInfo.label}</span>
             </div>
-            <div className="text-xs text-stone-400 flex items-center gap-1">
+            <div className="text-[10px] font-medium text-stone-400 flex items-center gap-1 mt-0.5">
               <MapPin size={10} /> {locationName || 'Lokasi'}
             </div>
           </div>
         </div>
         
-        <div className="flex items-center gap-3 pr-2">
-          <div className="flex flex-col items-end">
-            <span className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">Hujan</span>
-            <span className="text-sm font-bold text-emerald-600 flex items-center gap-1">
-              <Droplets size={14} /> {currentPrecip}%
-            </span>
-          </div>
-          <div className="w-8 h-8 flex items-center justify-center rounded-full bg-stone-50 text-stone-400">
-            {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-          </div>
+        <div className="flex flex-col items-end justify-center">
+          <span className="text-[9px] uppercase tracking-widest text-stone-400 font-bold mb-0.5">Hujan</span>
+          <span className="text-sm font-black text-emerald-600 flex items-center gap-1">
+            <Droplets size={14} /> {currentPrecip}%
+          </span>
         </div>
       </div>
 
-      {/* Expanded Details */}
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="border-t border-emerald-50 bg-stone-50/50"
-          >
-            <div className="p-5">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-4">Prakiraan Presipitasi (15 Jam)</h4>
-              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                {hourlyForecast.map((hour, idx) => {
-                  const info = weatherCodes[hour.weathercode] || weatherCodes[0];
-                  const time = hour.time ? format(parseISO(hour.time), 'HH:mm') : '';
-                  const precip = hour.precipitation_probability || 0;
-                  
-                  return (
-                    <div key={idx} className="flex flex-col items-center gap-2 min-w-[50px] snap-center">
-                      <span className="text-xs text-stone-500">{idx === 0 ? 'Sek' : time}</span>
-                      {React.cloneElement(info.icon as React.ReactElement, { size: 20 })}
-                      <div className="flex flex-col items-center mt-1">
-                        <span className="text-xs font-bold text-emerald-600">{precip}%</span>
-                        <span className="text-[10px] text-stone-400">{Math.round(hour.temperature)}°</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+      {/* Tabs */}
+      <div className="flex px-4 pt-3 pb-2 gap-2 bg-stone-50/50 shrink-0">
+        <button
+          onClick={() => setActiveView('hourly')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold rounded-xl transition-all ${
+            activeView === 'hourly' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200' : 'bg-white text-stone-500 border border-stone-200 hover:bg-stone-50'
+          }`}
+        >
+          <Clock size={14} /> 15 Jam
+        </button>
+        <button
+          onClick={() => setActiveView('daily')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-bold rounded-xl transition-all ${
+            activeView === 'daily' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200' : 'bg-white text-stone-500 border border-stone-200 hover:bg-stone-50'
+          }`}
+        >
+          <CalendarDays size={14} /> 7 Hari
+        </button>
+      </div>
 
-              <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-3 mt-2">7 Hari Kedepan</h4>
-              <div className="flex flex-col gap-2">
-                {dailyForecast.map((day, idx) => {
-                  const info = weatherCodes[day.weathercode] || weatherCodes[0];
-                  const dayName = idx === 0 ? 'Hari Ini' : format(parseISO(day.time), 'EEEE', { locale: id });
-                  const precip = day.precipitation_probability_max || 0;
-                  
-                  return (
-                    <div key={idx} className="flex items-center justify-between text-sm p-2 rounded-xl hover:bg-white transition-colors">
-                      <span className="w-24 font-medium text-stone-700">{dayName}</span>
-                      <div className="flex items-center gap-2 flex-1 justify-center">
-                        {React.cloneElement(info.icon as React.ReactElement, { size: 18 })}
-                        <span className="text-stone-500 text-xs hidden sm:inline">{info.label}</span>
-                      </div>
-                      <div className="flex items-center gap-4 w-32 justify-end">
-                        <span className="text-emerald-600 font-bold flex items-center gap-1 text-xs w-12 justify-end">
-                          <Droplets size={12} /> {precip}%
-                        </span>
-                        <div className="flex items-center gap-1.5 text-xs font-medium w-12 justify-end">
-                          <span className="text-stone-400">{Math.round(day.temperature_2m_min)}°</span>
-                          <span className="text-stone-700">{Math.round(day.temperature_2m_max)}°</span>
-                        </div>
-                      </div>
+      {/* Content Area */}
+      <div className="flex-1 bg-stone-50/50 overflow-y-auto p-4 custom-scrollbar relative">
+        {error && !currentWeather ? (
+          <div className="bg-red-50 p-3 rounded-xl text-center text-xs font-medium text-red-500">
+            {error}
+          </div>
+        ) : activeView === 'hourly' ? (
+          <div className="grid grid-cols-5 gap-y-4 gap-x-2">
+            {hourlyForecast.map((hour, idx) => {
+              const info = weatherCodes[hour.weathercode] || weatherCodes[0];
+              const time = hour.time ? format(parseISO(hour.time), 'HH:mm') : '';
+              const precip = hour.precipitation_probability || 0;
+              
+              return (
+                <div key={idx} className="flex flex-col items-center justify-center gap-1.5 bg-white py-3 rounded-xl border border-stone-100 shadow-sm">
+                  <span className="text-[10px] font-bold text-stone-400">{idx === 0 ? 'Sekarang' : time}</span>
+                  {React.cloneElement(info.icon as React.ReactElement, { size: 18 })}
+                  <div className="flex flex-col items-center mt-1">
+                    <span className="text-[10px] font-black text-emerald-600">{precip}%</span>
+                    <span className="text-[11px] font-bold text-stone-700">{Math.round(hour.temperature)}°</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {dailyForecast.map((day, idx) => {
+              const info = weatherCodes[day.weathercode] || weatherCodes[0];
+              const dayName = idx === 0 ? 'Hari Ini' : format(parseISO(day.time), 'EEEE', { locale: id });
+              const precip = day.precipitation_probability_max || 0;
+              
+              return (
+                <div key={idx} className="flex items-center justify-between text-sm p-3 bg-white rounded-xl border border-stone-100 shadow-sm">
+                  <span className="w-24 font-bold text-stone-700 text-xs">{dayName}</span>
+                  <div className="flex items-center gap-2 flex-1 justify-center">
+                    {React.cloneElement(info.icon as React.ReactElement, { size: 16 })}
+                    <span className="text-stone-500 text-[11px] font-medium hidden sm:inline">{info.label}</span>
+                  </div>
+                  <div className="flex items-center gap-3 w-32 justify-end">
+                    <span className="text-emerald-600 font-bold flex items-center gap-1 text-[11px] w-12 justify-end">
+                      <Droplets size={10} /> {precip}%
+                    </span>
+                    <div className="flex items-center gap-1.5 text-[11px] font-bold w-12 justify-end">
+                      <span className="text-stone-400">{Math.round(day.temperature_2m_min)}°</span>
+                      <span className="text-stone-700">{Math.round(day.temperature_2m_max)}°</span>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          </motion.div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
-      </AnimatePresence>
+      </div>
 
-      {error && !currentWeather && (
-        <div className="bg-red-50 p-3 text-center text-xs text-red-500">
-          {error}
-        </div>
-      )}
+      <style dangerouslySetInnerHTML={{__html: `
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #e7e5e4;
+          border-radius: 20px;
+        }
+      `}} />
     </div>
   );
 }
