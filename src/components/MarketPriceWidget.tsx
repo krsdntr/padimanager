@@ -9,13 +9,24 @@ interface PriceData {
   perubahan?: number; // percentage or exact
 }
 
-export default function MarketPriceWidget() {
-  const [prices, setPrices] = useState<PriceData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [locationName, setLocationName] = useState<string>('Nasional');
+let cachedPrices: PriceData[] | null = null;
+let cachedLocation: string | null = null;
+let lastFetchTime: number = 0;
 
-  const fetchLocationAndPrices = async () => {
+export default function MarketPriceWidget() {
+  const [prices, setPrices] = useState<PriceData[]>(cachedPrices || []);
+  const [loading, setLoading] = useState(!cachedPrices);
+  const [error, setError] = useState<string | null>(null);
+  const [locationName, setLocationName] = useState<string>(cachedLocation || 'Nasional');
+
+  const fetchLocationAndPrices = async (force = false) => {
+    if (!force && cachedPrices && Date.now() - lastFetchTime < 1800000) {
+      setPrices(cachedPrices);
+      setLocationName(cachedLocation || 'Nasional');
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -31,6 +42,7 @@ export default function MarketPriceWidget() {
               if (geoRes.ok) {
                 const geoData = await geoRes.json();
                 const province = geoData.address?.state || geoData.address?.region || 'Lokal';
+                cachedLocation = province;
                 setLocationName(province);
               }
             } catch (err) {
@@ -75,6 +87,8 @@ export default function MarketPriceWidget() {
         })) : [];
         
         if (filtered.length > 0) {
+          cachedPrices = filtered;
+          lastFetchTime = Date.now();
           setPrices(filtered);
           setLoading(false);
           return;
@@ -84,12 +98,15 @@ export default function MarketPriceWidget() {
       // Fallback data simulasi kredibel karena URL Bapanas sering membutuhkan Auth/Token internal di browser
       // Digunakan HANYA JIKA antarmuka gagal me-*resolve* request CORS dari panelharga.badanpangan.go.id
       setTimeout(() => {
-        setPrices([
+        const defaultPrices = [
           { komoditas: 'Gabah Kering Panen (GKP)', harga: 6200, perubahan: 1.2 },
           { komoditas: 'Gabah Kering Giling (GKG)', harga: 7100, perubahan: -0.5 },
           { komoditas: 'Beras Medium', harga: 12500, perubahan: 0.8 },
           { komoditas: 'Beras Premium', harga: 14800, perubahan: 0 },
-        ]);
+        ];
+        cachedPrices = defaultPrices;
+        lastFetchTime = Date.now();
+        setPrices(defaultPrices);
         setLoading(false);
       }, 800);
 
@@ -121,7 +138,7 @@ export default function MarketPriceWidget() {
           </p>
         </div>
         <button 
-          onClick={fetchLocationAndPrices}
+          onClick={() => fetchLocationAndPrices(true)}
           className="p-2 text-stone-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-full transition-colors"
           disabled={loading}
         >
